@@ -1,4 +1,6 @@
-﻿using Handsoft.Prizes.V2.Models;
+﻿using Handsoft.Prizes.App.Data;
+using Handsoft.Prizes.App.Data.Entities;
+using Handsoft.Prizes.App.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -36,7 +38,6 @@ namespace Handsoft.Prizes.App.Controllers
                 var telco = trackerCallback.Telco;
                 var shortNumber = trackerCallback.Destino.ToString().Trim();
 
-                // Try catch no answer y log
                 // Obtener sorteos para el serviceId y numero destino
                 var draws = await _prizesContext.Draws
                     .Include(_ => _.Trackerservice)
@@ -58,11 +59,12 @@ namespace Handsoft.Prizes.App.Controllers
                             continue;
                         }
                     }
+
                     // Verificar si está activo
                     if (draws[i].EndDate > DateTime.Now && draws[i].StartDate < DateTime.Now)
                     {
                         // Persistir usuario (es necesario usar los generateCode?)
-                        var user = new Entities.User
+                        var user = new User
                         {
                             DrawId = draws[i].Id,
                             Message = message,
@@ -73,7 +75,7 @@ namespace Handsoft.Prizes.App.Controllers
                             RegistrationType = 0
                         };
 
-                        _prizesContext.Users.Add(user);
+                        await _prizesContext.Users.AddAsync(user);
 
                         await _prizesContext.SaveChangesAsync();
 

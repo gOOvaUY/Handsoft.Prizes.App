@@ -1,13 +1,10 @@
-﻿using System;
-using Handsoft.Prizes.V2.Entities;
+﻿using Handsoft.Prizes.App.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Handsoft.Prizes.App.Data
 {
     public partial class PrizesContext : DbContext
-    {       
-
+    {
         public PrizesContext(DbContextOptions options) : base(options)
         {
         }
@@ -19,7 +16,6 @@ namespace Handsoft.Prizes.App.Data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Winner> Winners { get; set; }
 
-  
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Draw>(entity =>
